@@ -1,5 +1,5 @@
 from flask import Flask
-from api import api_bp
+from tags_api import api_bp
 
 app = Flask(__name__)
 
