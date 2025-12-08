@@ -69,17 +69,41 @@ especialidade_args = reqparse.RequestParser()
 especialidade_args.add_argument('nome', type=str, required=True, help="Nome é um campo obrigatório")
 especialidade_args.add_argument('descrição', type=str)
 
+busca_args = reqparse.RequestParser()
+busca_args.add_argument('page', type=int, default=1, location='args', help="Página atual")
+busca_args.add_argument('per_page', type=int, default=10, location='args', help="Itens por página")
+
 especialidade_fields = {
     'id': fields.Integer,
     'nome': fields.String,
     'descricao': fields.String
 }
 
+paginacao_fields = {
+    'pagina_atual': fields.Integer,
+    'total_paginas': fields.Integer,
+    'total_itens': fields.Integer,
+    'itens': fields.List(fields.Nested(especialidade_fields)) 
+}
+
+
 class Especialidades(Resource):
     @marshal_with(especialidade_fields)
     def get(self):
-        especialidades = EspecialidadeModel.query.all()
-        return especialidades 
+        args = busca_args.parse_args()
+
+        pagination = EspecialidadeModel.query.paginate(
+            page=args['page'], 
+            per_page=args['per_page'], 
+            error_out=False
+        )
+        
+        return {
+            'pagina_atual': pagination.page,
+            'total_paginas': pagination.pages,
+            'total_itens': pagination.total,
+            'itens': pagination.items
+        }
     
     @marshal_with(especialidade_fields)
     def post(self):
@@ -87,16 +111,15 @@ class Especialidades(Resource):
         especialidade = EspecialidadeModel(nome=args['nome'], descricao=args['descrição'])
         db.session.add(especialidade)
         db.session.commit() 
-        especialidades = EspecialidadeModel.query.all()
-        return especialidades, 201
+        return especialidade, 201
 
 class Especialidade(Resource):
     @marshal_with(especialidade_fields)
     def get(self, id):
-       especialidade = EspecialidadeModel.query.filter_by(id=id).first() 
-       if not especialidade:
+        especialidade = EspecialidadeModel.query.filter_by(id=id).first() 
+        if not especialidade:
            abort(404, 'Especialidade não existe.')
-           return especialidade
+        return especialidade
     
     @marshal_with(especialidade_fields)
     def put(self, id):
