@@ -132,7 +132,6 @@ class Especialidade(Resource):
         db.session.commit()
         return especialidade 
 
-    @marshal_with(especialidade_fields)
     def delete(self, id):
         especialidade = EspecialidadeModel.query.filter_by(id=id).first()
         if not especialidade:
@@ -140,7 +139,7 @@ class Especialidade(Resource):
         db.session.delete(especialidade)
         db.session.commit()
         especialidades = EspecialidadeModel.query.all()
-        return 204 
+        return '', 204 
         
 api.add_resource(Especialidades, '/api/especialidades/') 
 api.add_resource(Especialidade, '/api/especialidades/<int:id>')
