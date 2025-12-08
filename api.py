@@ -28,8 +28,8 @@ class EspecialidadeModel(db.Model):
     nome = db.Column(db.String(100), unique=True, nullable=False)
     descricao = db.Column(db.String(500))
     
-    medicos = db.relationship('Medico', backref='especialidade')
-    cirurgias = db.relationship('Cirurgia', backref='especialidade')
+    medicos = db.relationship('MedicoModel', backref='especialidade')
+    cirurgias = db.relationship('CirurgiaModel', backref='especialidade')
 
 class CirurgiaModel(db.Model):
     __tablename__ = 'cirurgia'
@@ -93,15 +93,15 @@ class Especialidades(Resource):
 class Especialidade(Resource):
     @marshal_with(especialidade_fields)
     def get(self, id):
-       especialidade = EspecialidadeModel.querry.filter_by(id=id).first() 
+       especialidade = EspecialidadeModel.query.filter_by(id=id).first() 
        if not especialidade:
            abort(404, 'Especialidade não existe.')
            return especialidade
     
     @marshal_with(especialidade_fields)
-    def patch(self, id):
+    def put(self, id):
         args = especialidade_args.parse_args()
-        especialidade = EspecialidadeModel.querry.filter_by(id=id).first()
+        especialidade = EspecialidadeModel.query.filter_by(id=id).first()
         if not especialidade:
             abort(404, 'Especialidade não existe.') 
         especialidade.nome = args['nome']
@@ -117,7 +117,7 @@ class Especialidade(Resource):
         db.session.delete(especialidade)
         db.session.commit()
         especialidades = EspecialidadeModel.query.all()
-        return especialidades, 204 
+        return especialidades, 200 
         
 api.add_resource(Especialidades, '/api/especialidades/') 
 api.add_resource(Especialidade, '/api/especialidades/<int:id>')
