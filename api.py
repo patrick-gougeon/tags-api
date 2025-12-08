@@ -20,6 +20,7 @@ class Especialidade(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False)
+    descricao = db.Column(db.String(500))
     
     medicos = db.relationship('Medico', backref='especialidade')
     cirurgias = db.relationship('Cirurgia', backref='especialidade')
@@ -46,12 +47,20 @@ class Responsavel(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(200))
+    telefone = db.Column(db.String(50))
 
 class Plano(db.Model):
     __tablename__ = 'plano'
     
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False)
+    sigla = db.Column(db.String(10))
 
 if __name__ == '__main__':
+    with app.app_context():
+        # Cria as tabelas se não existirem
+        db.create_all()
+        print("Banco de dados atualizado com sucesso!")
+    
     app.run(debug=True)
