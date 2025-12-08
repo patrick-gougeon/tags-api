@@ -67,7 +67,7 @@ class PlanoModel(db.Model):
 
 especialidade_args = reqparse.RequestParser()
 especialidade_args.add_argument('nome', type=str, required=True, help="Nome é um campo obrigatório")
-especialidade_args.add_argument('descrição', type=str)
+especialidade_args.add_argument('descricao', type=str)
 
 busca_args = reqparse.RequestParser()
 busca_args.add_argument('page', type=int, default=1, location='args', help="Página atual")
@@ -88,7 +88,7 @@ paginacao_fields = {
 
 
 class Especialidades(Resource):
-    @marshal_with(especialidade_fields)
+    @marshal_with(paginacao_fields)
     def get(self):
         args = busca_args.parse_args()
 
@@ -108,7 +108,7 @@ class Especialidades(Resource):
     @marshal_with(especialidade_fields)
     def post(self):
         args = especialidade_args.parse_args()
-        especialidade = EspecialidadeModel(nome=args['nome'], descricao=args['descrição'])
+        especialidade = EspecialidadeModel(nome=args['nome'], descricao=args['descricao'])
         db.session.add(especialidade)
         db.session.commit() 
         return especialidade, 201
@@ -128,7 +128,7 @@ class Especialidade(Resource):
         if not especialidade:
             abort(404, 'Especialidade não existe.') 
         especialidade.nome = args['nome']
-        especialidade.descricao = args['descrição']
+        especialidade.descricao = args['descricao']
         db.session.commit()
         return especialidade 
 
@@ -140,7 +140,7 @@ class Especialidade(Resource):
         db.session.delete(especialidade)
         db.session.commit()
         especialidades = EspecialidadeModel.query.all()
-        return especialidades, 200 
+        return 204 
         
 api.add_resource(Especialidades, '/api/especialidades/') 
 api.add_resource(Especialidade, '/api/especialidades/<int:id>')
