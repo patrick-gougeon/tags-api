@@ -25,11 +25,20 @@ db.init_app(app)
 api = Api(app)
 
 # Rotas
-api.add_resource(Especialidades, '/api/especialidades/') 
+api.add_resource(Especialidades, '/api/especialidades') 
 api.add_resource(Especialidade, '/api/especialidades/<int:id>')
 
-api.add_resource(Responsaveis, '/api/responsaveis/') 
-api.add_resource(Responsavel, '/api/especialidades/<int:id>')
+api.add_resource(Responsaveis, '/api/responsaveis') 
+api.add_resource(Responsavel, '/api/responsaveis/<int:id>')
+
+api.add_resource(Medicos, '/api/medicos') 
+api.add_resource(Medico, '/api/medicos/<int:id>')
+
+api.add_resource(Cirurgias, '/api/cirurgias') 
+api.add_resource(Cirurgia, '/api/cirurgias/<int:id>')
+
+api.add_resource(Planos, '/api/planos') 
+api.add_resource(Plano, '/api/planos/<int:id>')
 
 @app.route('/')
 def home():

@@ -2,7 +2,7 @@ from flask_restful import Resource, reqparse, fields, marshal, abort
 from models import *
 
 # --- Resources genérico ---
-class DefaultResource(Resource):
+class DefaultsResource(Resource):
     default_fields = None
     model = None
     default_args = None
@@ -45,7 +45,7 @@ class DefaultResource(Resource):
             db.session.rollback()
             return {'message': 'Erro ao salvar no banco', 'error': str(e)}, 500
         
-class DefaultsResource(Resource):
+class DefaultResource(Resource):
     default_fields = None
     model = None
     default_args = None
@@ -83,7 +83,7 @@ class DefaultsResource(Resource):
             db.session.rollback()
             return {'erro': f'Erro interno: {str(e)}'}, 500
 
-# --- Resources Especialidade ---
+# --- Resources especialidade ---
 
 # Parser
 especialidade_args = reqparse.RequestParser()
@@ -132,3 +132,77 @@ class Responsavel(DefaultResource):
     default_fields = responsavel_fields
     model = ResponsavelModel
     default_args = responsavel_args
+    
+# --- Resources médico ---
+
+# Parser
+medico_args = reqparse.RequestParser()
+medico_args.add_argument('nome', type=str, required=True, help="Nome é obrigatório")
+medico_args.add_argument('tipo', type=str, required=True, help="Tipo é obrigatório")
+medico_args.add_argument('id_especialidade', type=int)
+
+# Fields
+medico_fields = {
+    'id': fields.Integer,
+    'nome': fields.String,
+    'tipo': fields.String,
+    'id_especialidade': fields.Integer
+}
+
+class Medicos(DefaultsResource):
+    default_fields = medico_fields
+    model = MedicoModel
+    default_args = medico_args
+    
+class Medico(DefaultResource):
+    default_fields = medico_fields
+    model = MedicoModel
+    default_args = medico_args
+    
+# --- Resources cirurgia ---
+
+# Parser
+cirurgia_args = reqparse.RequestParser()
+cirurgia_args.add_argument('nome', type=str, required=True, help="Nome é obrigatório")
+cirurgia_args.add_argument('id_especialidade', type=int)
+
+# Fields
+cirurgia_fields = {
+    'id': fields.Integer,
+    'nome': fields.String,
+    'id_especialidade': fields.Integer
+}
+
+class Cirurgias(DefaultsResource):
+    default_fields = cirurgia_fields
+    model = CirurgiaModel
+    default_args = cirurgia_args
+    
+class Cirurgia(DefaultResource):
+    default_fields = cirurgia_fields
+    model = CirurgiaModel
+    default_args = cirurgia_args
+    
+# --- Resources plano ---
+
+# Parser
+plano_args = reqparse.RequestParser()
+plano_args.add_argument('nome', type=str, required=True, help="Nome é obrigatório")
+plano_args.add_argument('sigla', type=str)
+
+# Fields
+plano_fields = {
+    'id': fields.Integer,
+    'nome': fields.String,
+    'sigla': fields.String
+}
+
+class Planos(DefaultsResource):
+    default_fields = plano_fields
+    model = PlanoModel
+    default_args = plano_args
+    
+class Plano(DefaultResource):
+    default_fields = plano_fields
+    model = PlanoModel
+    default_args = plano_args
