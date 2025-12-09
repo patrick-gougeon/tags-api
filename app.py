@@ -10,7 +10,7 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# Configuração
+# Configuração de conexão do DB
 USUARIO = os.getenv('DB_USUARIO')
 SENHA = os.getenv('DB_SENHA')
 HOST = os.getenv('DB_HOST')
@@ -22,6 +22,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Inicialização do Banco
 db.init_app(app) 
 
+# Inicialização da Apiz
 api = Api(app)
 
 # Rotas
@@ -40,10 +41,13 @@ api.add_resource(Cirurgia, '/api/cirurgias/<int:id>')
 api.add_resource(Planos, '/api/planos') 
 api.add_resource(Plano, '/api/planos/<int:id>')
 
+# Rota da home
 @app.route('/')
 def home():
     return '<h1>Upload de Tags API</h1>'
 
+
+# Main
 if __name__ == '__main__':
     with app.app_context():
         from models import EspecialidadeModel, MedicoModel, CirurgiaModel, ResponsavelModel, PlanoModel
