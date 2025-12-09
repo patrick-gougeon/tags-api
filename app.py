@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 
 from models import db
-from resources import Especialidades, Especialidade
+from resources import *
 
 load_dotenv()
 
@@ -27,6 +27,9 @@ api = Api(app)
 # Rotas
 api.add_resource(Especialidades, '/api/especialidades/') 
 api.add_resource(Especialidade, '/api/especialidades/<int:id>')
+
+api.add_resource(Responsaveis, '/api/responsaveis/') 
+api.add_resource(Responsavel, '/api/especialidades/<int:id>')
 
 @app.route('/')
 def home():
