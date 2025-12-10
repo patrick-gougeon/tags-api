@@ -10,16 +10,27 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# Configuração de conexão do DB
-USUARIO = os.getenv('DB_USUARIO')
-SENHA = os.getenv('DB_SENHA')
-HOST = os.getenv('DB_HOST')
-BANCO = os.getenv('DB_NOME')
+# --- Configuração SQLite (Para teste local) ---
+# --- INÍCIO DA NOVA CONFIGURAÇÃO ---
+import os
+basedir = os.path.abspath(os.path.dirname(__file__))
 
-app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{USUARIO}:{SENHA}@{HOST}/{BANCO}'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# Verifica qual tipo de banco está definido no arquivo .env
+db_tipo = os.getenv('DB_TIPO', 'sqlite') # Padrão é sqlite se não encontrar nada
 
-# Inicialização do Banco
+if db_tipo == 'sqlite':
+    print("--- Usando Banco de Dados: SQLite (Local) ---")
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'banco_teste.db')
+
+else:
+    print("--- Usando Banco de Dados: MySQL (Empresa) ---")
+    USUARIO = os.getenv('DB_USUARIO')
+    SENHA = os.getenv('DB_SENHA')
+    HOST = os.getenv('DB_HOST')
+    BANCO = os.getenv('DB_NOME')
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{USUARIO}:{SENHA}@{HOST}/{BANCO}'
+# --- FIM DA NOVA CONFIGURAÇÃO ---
+
 db.init_app(app) 
 
 # Inicialização da Apiz
