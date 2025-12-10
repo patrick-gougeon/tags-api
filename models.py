@@ -11,10 +11,7 @@ class EspecialidadeModel(db.Model):
     
     nome = db.Column(db.String(100), unique=True, nullable=False)
     descricao = db.Column(db.String(500))
-    
-    # Indica um relacionamento no db.
-    medicos = db.relationship('MedicoModel', backref='especialidade')
-    cirurgias = db.relationship('CirurgiaModel', backref='especialidade')
+
 
 class CirurgiaModel(db.Model):
     __tablename__ = 'cirurgia'
@@ -26,6 +23,8 @@ class CirurgiaModel(db.Model):
     
     # Foreign key de especialidade
     id_especialidade = db.Column(db.Integer, db.ForeignKey('especialidade.id', ondelete='SET NULL'))
+    
+    especialidade = db.relationship('EspecialidadeModel')
 
 class MedicoModel(db.Model):
     __tablename__ = 'medico'
@@ -38,6 +37,8 @@ class MedicoModel(db.Model):
 
     # Foreign key de especialidade
     id_especialidade = db.Column(db.Integer, db.ForeignKey('especialidade.id', ondelete='SET NULL')) 
+    
+    especialidade = db.relationship('EspecialidadeModel')
     
 class ResponsavelModel(db.Model):
     __tablename__ = 'responsavel'

@@ -80,7 +80,7 @@ class DefaultResource(Resource):
     def get(self, id):
         
         # Busca pela tag com o id passado nos argumentos do request.
-        default = self.model.query.get(id) 
+        default = self.model.query.get(id)
         
         # Tratamento caso a tag não exista no DB
         if not default: abort(404, message='Tag não existe.')
@@ -199,7 +199,7 @@ medico_fields = {
     'id': fields.Integer,
     'nome': fields.String,
     'tipo': fields.String,
-    'id_especialidade': fields.Integer
+    'especialidade': fields.String(attribute='especialidade.nome')
 }
 
 class Medicos(DefaultsResource):
@@ -223,7 +223,7 @@ cirurgia_args.add_argument('id_especialidade', type=int)
 cirurgia_fields = {
     'id': fields.Integer,
     'nome': fields.String,
-    'id_especialidade': fields.Integer
+    'especialidade': fields.String(attribute='especialidade.nome')
 }
 
 class Cirurgias(DefaultsResource):
