@@ -17,6 +17,7 @@ class DefaultsResource(Resource):
     busca_args = reqparse.RequestParser()
     busca_args.add_argument('page', type=int, default=1, location='args')
     busca_args.add_argument('per_page', type=int, default=10, location='args')
+    busca_args.add_argument('search', type=str, location='args')
 
     # GET
     def get(self):
@@ -31,10 +32,17 @@ class DefaultsResource(Resource):
         
         # Processa os parâmetros do request.
         args = self.busca_args.parse_args()
+         
+        # Sistema de pesquisa no DB
+        prompt = args['search']
+        if prompt is not None:
+            model_query = self.model.query.filter(self.model.nome.like(f'%{prompt}%'))
+        else:
+            model_query = self.model.query
         
-        # Recebe e utiliza os valores de paginação na query
-        # (paginate() é um método padrão do flask que facilita este processo).
-        pagination = self.model.query.paginate(
+         # Recebe e utiliza os valores de paginação na query
+        # (paginate() é um método padrão do flask que facilita este processo).    
+        pagination = model_query.paginate(
             page=args['page'], per_page=args['per_page'], error_out=False
         )
         
