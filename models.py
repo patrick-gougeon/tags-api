@@ -11,6 +11,7 @@ class EspecialidadeModel(db.Model):
     
     nome = db.Column(db.String(100), unique=True, nullable=False)
     descricao = db.Column(db.String(500))
+    ativo = db.Column(db.Boolean, default=True)
 
 
 class CirurgiaModel(db.Model):
@@ -23,6 +24,7 @@ class CirurgiaModel(db.Model):
     
     # Foreign key de especialidade
     id_especialidade = db.Column(db.Integer, db.ForeignKey('especialidade.id', ondelete='SET NULL'))
+    ativo = db.Column(db.Boolean, default=True)
     
     especialidade = db.relationship('EspecialidadeModel')
 
@@ -37,6 +39,8 @@ class MedicoModel(db.Model):
 
     # Foreign key de especialidade
     id_especialidade = db.Column(db.Integer, db.ForeignKey('especialidade.id', ondelete='SET NULL')) 
+    pacientes = db.Column(db.Integer)
+    ativo = db.Column(db.Boolean, default=True)
     
     especialidade = db.relationship('EspecialidadeModel')
     
@@ -49,6 +53,8 @@ class ResponsavelModel(db.Model):
     nome = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(200))
     telefone = db.Column(db.String(50))
+    pacientes = db.Column(db.Integer)
+    ativo = db.Column(db.Boolean, default=True)
 
 class PlanoModel(db.Model):
     __tablename__ = 'plano'
@@ -58,3 +64,5 @@ class PlanoModel(db.Model):
     
     nome = db.Column(db.String(100), unique=True, nullable=False)
     sigla = db.Column(db.String(10))
+    pacientes = db.Column(db.Integer)
+    ativo = db.Column(db.Boolean, default=True)

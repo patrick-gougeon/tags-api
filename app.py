@@ -29,6 +29,7 @@ else:
     HOST = os.getenv('DB_HOST')
     BANCO = os.getenv('DB_NOME')
     app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{USUARIO}:{SENHA}@{HOST}/{BANCO}'
+    
 # --- FIM DA NOVA CONFIGURAÇÃO ---
 
 db.init_app(app) 
@@ -62,6 +63,9 @@ def home():
 if __name__ == '__main__':
     with app.app_context():
         from models import EspecialidadeModel, MedicoModel, CirurgiaModel, ResponsavelModel, PlanoModel
+        # db.create_all() garante que as tabelas sejam criadas se não existirem.
+        # Para um ambiente de produção, é recomendado usar uma ferramenta de migração
+        # como o Flask-Migrate para gerenciar mudanças no esquema do banco de dados.
         db.create_all()
         print("Banco de dados conectado e tabelas verificadas.")
     

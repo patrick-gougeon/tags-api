@@ -150,12 +150,14 @@ class DefaultResource(Resource):
 especialidade_args = reqparse.RequestParser()
 especialidade_args.add_argument('nome', type=str, required=True, help="Nome é obrigatório")
 especialidade_args.add_argument('descricao', type=str)
+especialidade_args.add_argument('ativo', type=bool)
 
 # Fields
 especialidade_fields = {
     'id': fields.Integer,
     'nome': fields.String,
-    'descricao': fields.String
+    'descricao': fields.String,
+    'ativo': fields.Boolean
 }
 
 class Especialidades(DefaultsResource):
@@ -175,13 +177,17 @@ responsavel_args = reqparse.RequestParser()
 responsavel_args.add_argument('nome', type=str, required=True, help="Nome é obrigatório")
 responsavel_args.add_argument('email', type=str)
 responsavel_args.add_argument('telefone', type=str)
+responsavel_args.add_argument('pacientes', type=int)
+responsavel_args.add_argument('ativo', type=bool)
 
 # Fields
 responsavel_fields = {
     'id': fields.Integer,
     'nome': fields.String,
     'email': fields.String,
-    'telefone': fields.String
+    'telefone': fields.String,
+    'pacientes': fields.Integer,
+    'ativo': fields.Boolean
 }
 
 class Responsaveis(DefaultsResource):
@@ -201,13 +207,17 @@ medico_args = reqparse.RequestParser()
 medico_args.add_argument('nome', type=str, required=True, help="Nome é obrigatório")
 medico_args.add_argument('tipo', type=str, required=True, help="Tipo é obrigatório")
 medico_args.add_argument('id_especialidade', type=int)
+medico_args.add_argument('pacientes', type=int)
+medico_args.add_argument('ativo', type=bool)
 
 # Fields
 medico_fields = {
     'id': fields.Integer,
     'nome': fields.String,
     'tipo': fields.String,
-    'especialidade': fields.String(attribute='especialidade.nome')
+    'especialidade': fields.String(attribute='especialidade.nome'),
+    'pacientes': fields.Integer,
+    'ativo': fields.Boolean
 }
 
 class Medicos(DefaultsResource):
@@ -226,12 +236,14 @@ class Medico(DefaultResource):
 cirurgia_args = reqparse.RequestParser()
 cirurgia_args.add_argument('nome', type=str, required=True, help="Nome é obrigatório")
 cirurgia_args.add_argument('id_especialidade', type=int)
+cirurgia_args.add_argument('ativo', type=bool)
 
 # Fields
 cirurgia_fields = {
     'id': fields.Integer,
     'nome': fields.String,
-    'especialidade': fields.String(attribute='especialidade.nome')
+    'especialidade': fields.String(attribute='especialidade.nome'),
+    'ativo': fields.Boolean
 }
 
 class Cirurgias(DefaultsResource):
@@ -250,12 +262,16 @@ class Cirurgia(DefaultResource):
 plano_args = reqparse.RequestParser()
 plano_args.add_argument('nome', type=str, required=True, help="Nome é obrigatório")
 plano_args.add_argument('sigla', type=str)
+plano_args.add_argument('pacientes', type=int)
+plano_args.add_argument('ativo', type=bool)
 
 # Fields
 plano_fields = {
     'id': fields.Integer,
     'nome': fields.String,
-    'sigla': fields.String
+    'sigla': fields.String,
+    'pacientes': fields.Integer,
+    'ativo': fields.Boolean
 }
 
 class Planos(DefaultsResource):
