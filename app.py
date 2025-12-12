@@ -10,7 +10,7 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# --- Configuração SQLite (Para teste local) ---
+
 # --- INÍCIO DA NOVA CONFIGURAÇÃO ---
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
