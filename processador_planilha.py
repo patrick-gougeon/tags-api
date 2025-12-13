@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-from app import app
 from models import db, EspecialidadeModel, MedicoModel, ResponsavelModel, PlanoModel, CirurgiaModel
 
 class ProcessadorExcel:
@@ -26,7 +25,7 @@ class ProcessadorExcel:
 
     def _resolver_ids(self, df, modelo_referencia, col_excel, col_banco):
         """
-        Converte nomes (texto) da planilha em IDs (inteiros) consultando o banco.
+        Converte nomes (texto) da planilha em IDs (inteiros) consultando o banco."
         """
         if col_excel not in df.columns:
             return df
@@ -71,7 +70,6 @@ class ProcessadorExcel:
             # Substituímos tudo que não é dígito por vazio ''
             df['telefone'] = df['telefone'].astype(str).str.replace(r'\D', '', regex=True)
 
-        # --- RENOMEAÇÕES ---
         df = df.rename(columns={
             'descrição': 'descricao',
             'especialidade relacionada': 'especialidade_temp' 
@@ -128,6 +126,8 @@ class ProcessadorExcel:
                     self.salvar_no_banco(dados, Modelo)
 
 if __name__ == '__main__':
+    from app import app
+    
     with app.app_context():
 
         db.drop_all()

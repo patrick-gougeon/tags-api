@@ -53,6 +53,8 @@ api.add_resource(Cirurgia, '/api/cirurgias/<int:id>')
 api.add_resource(Planos, '/api/planos') 
 api.add_resource(Plano, '/api/planos/<int:id>')
 
+api.add_resource(UploadDados, '/api/upload')
+
 # Rota da home
 @app.route('/')
 def home():

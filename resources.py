@@ -1,6 +1,11 @@
 from flask_restful import Resource, reqparse, fields, marshal, abort
 from models import *
 
+import os
+from werkzeug.utils import secure_filename
+from flask import request
+from processador_planilha import ProcessadorExcel
+
 # --- Resources genéricos ---
 # Essa parte do código define classes genéricas pai, que serão
 # posteriormente herdadas pelas classes Medico, Especialidade, Plano etc...
@@ -283,3 +288,46 @@ class Plano(DefaultResource):
     default_fields = plano_fields
     model = PlanoModel
     default_args = plano_args
+
+# upload em massa
+class UploadDados(Resource):
+    def post(self):
+        # 1. Verifica se o arquivo foi enviado na requisição
+        if 'file' not in request.files:
+            return {'message': 'Nenhum arquivo enviado.'}, 400
+            
+        file = request.files['file']
+        
+        # 2. Verifica se o nome do arquivo é vazio
+        if file.filename == '':
+            return {'message': 'Nenhum arquivo selecionado.'}, 400
+            
+        if file:
+            # 3. Garante que o nome do arquivo é seguro (remove caracteres perigosos)
+            filename = secure_filename(file.filename)
+            
+            # Cria pasta de uploads se não existir
+            upload_folder = os.path.join(os.getcwd(), 'uploads')
+            if not os.path.exists(upload_folder):
+                os.makedirs(upload_folder)
+                
+            filepath = os.path.join(upload_folder, filename)
+            
+            try:
+                # 4. Salva o arquivo temporariamente
+                file.save(filepath)
+                
+                # 5. Instancia e executa o processador
+                processador = ProcessadorExcel()
+                processador.executar(filepath)
+                
+                # 6. Remove o arquivo após o processamento (Limpeza)
+                os.remove(filepath)
+                
+                return {'message': 'Processamento de dados concluído com sucesso!'}, 201
+                
+            except Exception as e:
+                # Se der erro, tenta remover o arquivo mesmo assim para não acumular lixo
+                if os.path.exists(filepath):
+                    os.remove(filepath)
+                return {'message': 'Erro ao processar planilha.', 'error': str(e)}, 500
